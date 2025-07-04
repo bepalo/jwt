@@ -1,0 +1,47 @@
+{
+  "name": "@bepalo/jwt",
+  "version": "2.0.0",
+  "description": "A secure and tested json-web-token class-based utility library for generating keys, signing, verifying, and decoding JWT payloads for use with your high-security projects.",
+  "author": "Natnael Eshetu",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bepalo/jwt.git"
+  },
+  "homepage": "https://github.com/bepalo/jwt#readme",
+  "exports": {
+    "import": "./dist/index.js",
+    "require": "./dist/cjs/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build:esm": "tsc --project tsconfig.esm.json",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:watch": "tsc --watch --project tsconfig.esm.json & tsc --watch --project tsconfig.cjs.json",
+    "prepare": "npm run build",
+    "test": "vitest --reporter=dot",
+    "test:ci": "vitest run --reporter=vitest-markdown-reporter --outputFile=test-result.md"
+  },
+  "keywords": [
+    "jwt",
+    "jsonwebtoken",
+    "crypto",
+    "signature",
+    "utility"
+  ],
+  "packageManager": "pnpm@10.12.1",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^24.0.2",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4",
+    "vitest-markdown-reporter": "^0.1.2"
+  },
+  "dependencies": {
+    "@bepalo/time": "^1.2.6"
+  }
+}
