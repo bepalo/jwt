@@ -1,6 +1,6 @@
 {
   "name": "@bepalo/jwt",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A secure and tested json-web-token class-based utility library for generating keys, signing, verifying, and decoding JWT payloads for use with your high-security projects.",
   "author": "Natnael Eshetu",
   "license": "MIT",
