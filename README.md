@@ -20,6 +20,7 @@ A secure and tested json-web-token class-based utility library for generating ke
 
 - [✨ Features](#-features)
 - [📥 Installation](#-installation)
+- [🚀 Quick Start](#-quick-start) 
 - [✅ Usage](#-usage)
   - [🔑 Key Creation](#-key-creation)
   - [🏗️ JWT Instance Creation](#️-jwt-instance-creation)
@@ -39,8 +40,8 @@ A secure and tested json-web-token class-based utility library for generating ke
 - ⌚ Time helper functions from [@bepalo/time](#bepalotime).
 - 📄 Written in modern TypeScript.
 - 📢 Available for both ESM and CommonJS.
-- 📢 Works with node, bun, and deno.
-- 📢 Built on crypto API.
+- 📢 Works with Node, Bun, and Deno.
+- 📢 Built on the crypto API.
 
 ## 📥 Installation
 
@@ -57,6 +58,8 @@ Pnpm:
 pnpm add @bepalo/jwt
 ```
 
+>Requires Node.js v18.0.0 or newer.
+
 Npm
 
 ```sh
@@ -69,6 +72,100 @@ Deno:
 import { JWT } from "jsr:@bepalo/jwt"
 ```
 
+## 🚀 Quick Start
+
+**Simple Symmetric HMAC:**
+
+```ts
+import { JWT } from "@bepalo/jwt";
+
+// 🏁 1. Generate a key
+const secret = JWT.genHmac("HS256");
+
+// 🏁 2. Store the generated key somewhere safe like in a .env file
+console.log(secret);
+
+// 🏁 3. Load that key from where it was stored
+const signKey = process.env.SECRET;
+const verifyKey = process.env.SECRET;
+
+// 🏁 4. Create a JWT instance for signing
+const jwtSign = JWT.createSymmetric(signKey, "HS256");
+
+// 🏁 5. Sign a payload
+const token = jwtSign.signSync({ 
+  userId: 123, 
+  role: "admin", 
+  jti: "tid-1234",
+  iat: JWT.now(), 
+  // exp: JWT.on("2026"),
+  // nbf: JWT.after(5).Minutes,
+  // ...
+});
+
+// 🏁 6. Create another JWT instance for verifying. *optional*
+const jwtVerify = JWT.createSymmetric(verifyKey, "HS256");
+
+// 🏁 7. Verify and decode the token
+const { valid, payload, error } = jwtVerify.verifySync(token, {
+  jti: "tid-1234",
+  nbfLeeway: JWT.for(5).Seconds
+});
+
+// 🏁 8. Deal with errors or use the payload
+console.log(valid);    // true
+console.log(payload);  // { userId: 123, role: "admin", ... }
+console.log(error);    // undefined
+```
+
+**Generic:**
+
+```ts
+import { JWT } from "@bepalo/jwt";
+
+// 🏁 1. Generate a key
+const key = JWT.genKey("ES256");
+
+// 🏁 2. Store the generated key somewhere safe like in a .env file
+const { alg, publicKey, privateKey } = key;
+console.log(JSON.stringify({ alg, publicKey }));
+console.log(JSON.stringify({ alg, privateKey }));
+
+// 🏁 3. Load that key from where it was stored
+const signKey = JSON.parse(process.env.PRIVATE_KEY ?? "null");
+const verifyKey = JSON.parse(process.env.PUBLIC_KEY ?? "null");
+
+// 🏁 4. Create a JWT instance for signing
+const jwtSign = JWT.create(signKey);
+
+// 🏁 5. Sign a payload
+const token = jwtSign.signSync({ 
+  userId: 123, 
+  role: "admin", 
+  jti: "tid-1234",
+  iat: JWT.now(), 
+  // exp: JWT.on("2026"),
+  // nbf: JWT.after(5).Minutes,
+  // ...
+});
+
+// 🏁 6. Create a JWT instance for verifying
+const jwtVerify = JWT.create(verifyKey);
+
+// 🏁 7. Verify and decode the token
+const { valid, payload, error } = jwtVerify.verifySync(token, {
+  jti: "tid-1234",
+  nbfLeeway: JWT.for(5).Seconds
+});
+
+// 🏁 8. Deal with errors or use the payload
+console.log(valid);    // true
+console.log(payload);  // { userId: 123, role: "admin", ... }
+console.log(error);    // undefined
+
+```
+
+
 ## ✅ Usage
 
 ### 🔑 Key Creation
@@ -76,10 +173,10 @@ import { JWT } from "jsr:@bepalo/jwt"
 ```ts
 import { JWT } from "@bepalo/jwt";
 
-// Symmetric HMAC key generation. returns string
+// 📢 Symmetric HMAC key generation. returns string
 const secret = JWT.genHmac("HS256");
 
-// Generic way of generating any key. returns JwtKey
+// 📢 Generic way of generating any key. returns JwtKey
 const key = JWT.genKey("none");
 const key = JWT.genKey("HS512"); 
 const key = JWT.genKey("ES384"); 
@@ -95,12 +192,12 @@ import { JWT } from "@bepalo/jwt";
 
 type Payload = { userId: number, role: "admin" | "user" };
 
-// Symmetric only way of creating a JWT instance.
 const secret = JWT.genHmac("HS256");
+// 📢 Symmetric only way of creating a JWT instance.
 const jwt = JWT.createSymmetric<Payload>(secret, "HS256");
 
-// Generic way of creating a JWT instance
 const key = JWT.genKey("ES256"); 
+// 📢 Generic way of creating a JWT instance
 const jwt = JWT.create<Payload>(key);
 ```
 
@@ -116,7 +213,7 @@ type Payload = { userId: number, role: "admin" | "user" };
 const key = JWT.genKey("HS256"); 
 const jwt = JWT.create<Payload>(key);
 
-// Sign synchronously
+// 📢 Sign synchronously
 const token = jwt.signSync({ userId: 123, role: "admin", iat: JWT.now() });
 ```
 
@@ -130,7 +227,7 @@ type Payload = { userId: number, role: "admin" | "user" };
 const key = JWT.genKey("HS256"); 
 const jwt = JWT.create<Payload>(key);
 
-// Sign asynchronously
+// 📢 Sign asynchronously
 const token = await jwt.sign({ userId: 123, role: "admin", iat: JWT.now() });
 ```
 
@@ -148,10 +245,10 @@ const jwt = JWT.create<Payload>(key);
 
 const token = jwt.signSync({ userId: 123, role: "admin", iat: JWT.now() });
 
-// Verify synchronously
+// 📢 Verify synchronously
 const { valid, payload, error } = jwt.verifySync(token);
 
-// Verify signature synchronously
+// 📢 Verify signature synchronously
 const { valid, error } = jwt.verifySignatureSync(token);
 ```
 
@@ -167,10 +264,10 @@ const jwt = JWT.create<Payload>(key);
 
 const token = await jwt.sign({ userId: 123, role: "admin", iat: JWT.now() });
 
-// Verify asynchronously
+// 📢 Verify asynchronously
 const payload = await jwt.verify(token);
 
-// Verify signature asynchronously
+// 📢 Verify signature asynchronously
 const valid = await jwt.verifySignature(token);
 ```
 
@@ -498,7 +595,7 @@ But you can use `ES256` or `ES384`, or switch to a runtime that supports it.
 
 <details>
 
-<summary><b>RSA-PSS (Asymmetric): RSA-PSS variants.<b></summary>
+<summary><b>RSA-PSS (Asymmetric): RSA-PSS variants.</b></summary>
 
   - PS256: RSA-PSS variant with SHA-256.
   - PS384: RSA-PSS variant with SHA-384.
@@ -519,7 +616,6 @@ For more details, see [RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519) 
 ## 🕊️ Thanks, Stay Safe and Enjoy
 
 If you like this library and want to support then please give a star on [GitHub ![GitHub Repo stars](https://img.shields.io/github/stars/bepalo/jwt?style=social)](https://github.com/bepalo/jwt)
-.
 
 <details>
 <summary> Easter egg</summary>
