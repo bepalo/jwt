@@ -299,7 +299,7 @@ class JWT<Payload> {
 /**
  * Error class for use with this JWT library
  */
-export class JwtError extends Error {
+class JwtError extends Error {
   code: JwtErrorCode;
 }
 ```
@@ -404,7 +404,7 @@ type JwtAlgorithm =
 /**
  * Smart Error codes for use with this JWT library
  */
-export enum JwtErrorCode {
+enum JwtErrorCode {
   internalError = 0,
 
   invalid = 100,
@@ -479,6 +479,7 @@ But you can use `ES256` or `ES384`, or switch to a runtime that supports it.
 <details>
 
 <summary><b>ECDSA-Based (Asymmetric, Efficient):</b> Faster than RSA, great for modern applications.</summary>
+
   - ES256: Recommended alternative to RSA.
   - ES384: Stronger cryptographic security.
   - ES512: Best for ultra-secure environments. **NOTE: May not be supported/implemented in all runtimes.**
@@ -487,7 +488,8 @@ But you can use `ES256` or `ES384`, or switch to a runtime that supports it.
 
 <details>
 
-<summary><b>RSA-Based (Asymmetric, Public-Private Key):</b> Used for OAuth, OpenID, and other key-based authentication.</summary>
+<summary><b>RSA-Based (Asymmetric):</b> Used for OAuth, OpenID, and other key-based authentication.</summary>
+
   - RS256: Widely used.
   - RS384: Stronger but heavier.
   - RS512: Computationally expensive but highly secure.
@@ -496,7 +498,8 @@ But you can use `ES256` or `ES384`, or switch to a runtime that supports it.
 
 <details>
 
-<summary><b>RSA-PSS (Asymmetric, Public-Private Key): RSA-PSS variants.<b></summary>
+<summary><b>RSA-PSS (Asymmetric): RSA-PSS variants.<b></summary>
+
   - PS256: RSA-PSS variant with SHA-256.
   - PS384: RSA-PSS variant with SHA-384.
   - PS512: RSA-PSS variant with SHA-512.
@@ -521,7 +524,9 @@ If you like this library and want to support then please give a star on [GitHub 
 <details>
 <summary> Easter egg</summary>
 
-`eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzM4NCJ9.eyJtZXNzYWdlIjoiVGhhbmsgR29kIPCflYrvuI8gZm9yIGV2ZXJ5dGhpbmchIiwiaWF0IjoxNzUxNjczNjAwLCJuYmYiOi0yMTQ2NTIxNjAwLCJpc3MiOiJOYXRuYWVsIiwic3ViIjoiR3JhdGl0dWRlIn0.MGYCMQD9gERXQbDSQgqHEnVeKe0MUcnjnJ4pkPMwK0Aakgf3QWQFqSqMcaUE3zThJ48WsP0CMQDNwVqeaT2FvEcqzonhhKAKSm8c7rWd1heqCjbctgk_Lln0HTvGyuCwcNiAx7TytCA`
+<div style="word-break: break-all;">
+eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzM4NCJ9.eyJtZXNzYWdlIjoiVGhhbmsgR29kIPCflYrvuI8gZm9yIGV2ZXJ5dGhpbmchIiwiaWF0IjoxNzUxNjczNjAwLCJuYmYiOi0yMTQ2NTIxNjAwLCJpc3MiOiJOYXRuYWVsIiwic3ViIjoiR3JhdGl0dWRlIn0.MGYCMQD9gERXQbDSQgqHEnVeKe0MUcnjnJ4pkPMwK0Aakgf3QWQFqSqMcaUE3zThJ48WsP0CMQDNwVqeaT2FvEcqzonhhKAKSm8c7rWd1heqCjbctgk_Lln0HTvGyuCwcNiAx7TytCA
+</div>
 
 </details>
 
