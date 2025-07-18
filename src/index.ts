@@ -1,6 +1,5 @@
 /**
- *
- * A secure and tested json-web-token class-based utility library for generating keys, signing, 
+ * A secure and tested json-web-token class-based utility library for generating keys, signing,
  * verifying, and decoding JWT payloads for use with your high-security projects.
  *
  * @module @bepalo/jwt
@@ -19,21 +18,20 @@
  * @exports JwtAsymmetricAlgorithm type
  * @exports JwtAlgorithm type
  * @exports SURecord type
- *
  */
 import {
+  constants,
   createHmac,
   createSign,
   createVerify,
   generateKeyPairSync,
-  sign,
-  verify,
-  constants,
   randomBytes,
+  sign,
   timingSafeEqual,
+  verify,
 } from "node:crypto";
 import { RelativeTime, Time } from "@bepalo/time";
-
+import { Buffer } from "node:buffer";
 
 export type SURecord = Record<string, unknown>;
 
@@ -93,7 +91,7 @@ export enum JwtErrorCode {
   keyInvalid = 300,
   privateKeyInvalid = 301,
   publicKeyInvalid = 302,
-};
+}
 
 /**
  * Error class for use with this JWT library
@@ -103,7 +101,6 @@ export class JwtError extends Error {
     super(message);
   }
 }
-
 
 // Supported symmetric algorithms
 export type JwtSymmetricAlgorithm = "HS256" | "HS384" | "HS512";
@@ -132,17 +129,16 @@ export type JwtAsymmetricAlgorithm =
  *   - ES256: Recommended alternative to RSA.
  *   - ES384: Stronger cryptographic security.
  *   - ES512: Best for ultra-secure environments. **NOTE: May not be supported/implemented in all runtimes.**
- * 
+ *
  * - **RSA-Based (Asymmetric, Public-Private Key)**: Used for OAuth, OpenID, and other key-based authentication.
  *   - RS256: Widely used.
  *   - RS384: Stronger but heavier.
  *   - RS512: Computationally expensive but highly secure.
- * 
+ *
  * - **RSA-PSS (Asymmetric, Public-Private Key): RSA-PSS variants.**
  *   - PS256: RSA-PSS variant with SHA-256.
  *   - PS384: RSA-PSS variant with SHA-384.
  *   - PS512: RSA-PSS variant with SHA-512.
- *
  */
 export type JwtAlgorithm =
   | JwtSymmetricAlgorithm
@@ -202,15 +198,15 @@ enum JwtAlgorithmModulusLenEnum {
 /**
  * Valid symmetric jwt algorithm sets for quick lookup
  */
-export const validJwtSymmetricAlgorithms: Set<JwtSymmetricAlgorithm> =
-  Object.freeze(new Set<JwtSymmetricAlgorithm>(["HS256", "HS384", "HS512"]));
-
+export const validJwtSymmetricAlgorithms: Set<JwtSymmetricAlgorithm> = Object.freeze(
+  new Set<JwtSymmetricAlgorithm>(["HS256", "HS384", "HS512"]),
+);
 
 /**
  * Valid asymmetric jwt algorithm set for quick lookup
  */
-export const validJwtAsymmetricAlgorithms: Set<JwtAsymmetricAlgorithm> =
-  Object.freeze(new Set<JwtAsymmetricAlgorithm>([
+export const validJwtAsymmetricAlgorithms: Set<JwtAsymmetricAlgorithm> = Object.freeze(
+  new Set<JwtAsymmetricAlgorithm>([
     "RS256",
     "RS384",
     "RS512",
@@ -220,27 +216,29 @@ export const validJwtAsymmetricAlgorithms: Set<JwtAsymmetricAlgorithm> =
     "ES256",
     "ES384",
     "ES512",
-  ]));
-
+  ]),
+);
 
 /**
  * Valid jwt algorithm set for quick lookup
  */
-export const validJwtAlgorithms: Set<JwtAlgorithm> = Object.freeze(new Set<JwtAlgorithm>([
-  "HS256",
-  "HS384",
-  "HS512",
-  "RS256",
-  "RS384",
-  "RS512",
-  "PS256",
-  "PS384",
-  "PS512",
-  "ES256",
-  "ES384",
-  "ES512",
-  "none"
-]));
+export const validJwtAlgorithms: Set<JwtAlgorithm> = Object.freeze(
+  new Set<JwtAlgorithm>([
+    "HS256",
+    "HS384",
+    "HS512",
+    "RS256",
+    "RS384",
+    "RS512",
+    "PS256",
+    "PS384",
+    "PS512",
+    "ES256",
+    "ES384",
+    "ES512",
+    "none",
+  ]),
+);
 
 /**
  * JWT header standard fields.
@@ -284,10 +282,10 @@ export type JwtResult<Payload extends SURecord> = {
 /**
  * JWT Key type with `alg`, `publicKey`, `privateKey` properties.
  */
-export type JwtKey = { 
-  alg: JwtAlgorithm, 
-  publicKey?: string; 
-  privateKey?: string 
+export type JwtKey = {
+  alg: JwtAlgorithm;
+  publicKey?: string;
+  privateKey?: string;
 };
 
 /**
@@ -397,7 +395,7 @@ export class JWT<Payload extends SURecord> {
 
   /**
    * Generate a random HMAC key for HS256 (32 bytes), HS384 (48 bytes), or HS512 (64 bytes) encoded in base64url format.
-   * 
+   *
    * @throws {JwtError} If the algorithm is invalid.
    */
   static genHmac(alg: JwtSymmetricAlgorithm): string {
@@ -431,19 +429,19 @@ export class JWT<Payload extends SURecord> {
        * Used only for RSA and RSA-PSS
        */
       modulusLength?: number;
-    }
+    },
   ): JwtKey {
     try {
       switch (alg) {
-        case "HS256":{
+        case "HS256": {
           const key = randomBytes(32).toString(encBase64url);
           return { alg, privateKey: key, publicKey: key } as JwtKey;
         }
-        case "HS384":{
+        case "HS384": {
           const key = randomBytes(48).toString(encBase64url);
           return { alg, privateKey: key, publicKey: key } as JwtKey;
         }
-        case "HS512":{
+        case "HS512": {
           const key = randomBytes(64).toString(encBase64url);
           return { alg, privateKey: key, publicKey: key } as JwtKey;
         }
@@ -496,8 +494,7 @@ export class JWT<Payload extends SURecord> {
         case "PS384":
         case "PS512": {
           const { publicKey, privateKey } = generateKeyPairSync("rsa", {
-            modulusLength:
-              options?.modulusLength ?? JwtAlgorithmModulusLenEnum[alg],
+            modulusLength: options?.modulusLength ?? JwtAlgorithmModulusLenEnum[alg],
             publicKeyEncoding: {
               type: "spki",
               format: "pem",
@@ -516,21 +513,24 @@ export class JWT<Payload extends SURecord> {
           throw new JwtError("invalid algorithm", JwtErrorCode.algorithmInvalid);
         }
       }
-    } catch(error) {
-      throw new JwtError(error instanceof Error ? error.message : "internal error", JwtErrorCode.internalError);
+    } catch (error) {
+      throw new JwtError(
+        error instanceof Error ? error.message : "internal error",
+        JwtErrorCode.internalError,
+      );
     }
   }
 
   /**
    * Create a JWT instance using a symmetric algorithm.
-   * 
+   *
    * @throws {JwtError} If the secret is null/empty or the algorithm is invalid.
    */
   static createSymmetric<Payload extends SURecord>(
     secret: string | undefined,
-    alg: JwtSymmetricAlgorithm
+    alg: JwtSymmetricAlgorithm,
   ): JWT<Payload> {
-    if(!secret) {
+    if (!secret) {
       throw new JwtError("null or empty symmetric secret", JwtErrorCode.keyInvalid);
     }
     if (!validJwtSymmetricAlgorithms.has(alg)) {
@@ -542,11 +542,11 @@ export class JWT<Payload extends SURecord> {
 
   /**
    * Create a JWT instance using an asymmetric algorithm.
-   * 
+   *
    * @throws {JwtError} If the algorithm is invalid.
    */
   static createAsymmetric<Payload extends SURecord>(
-    key: JwtKey
+    key: JwtKey,
   ): JWT<Payload> {
     if (!validJwtAsymmetricAlgorithms.has(key.alg as JwtAsymmetricAlgorithm)) {
       throw new JwtError("invalid asymmetric JWT algorithm", JwtErrorCode.algorithmInvalid);
@@ -556,13 +556,13 @@ export class JWT<Payload extends SURecord> {
 
   /**
    * Create a JWT instance using a symmetric or asymmetric algorithm.
-   * 
+   *
    * @throws {JwtError} If the algorithm is invalid.
    */
   static create<Payload extends SURecord>(
-    key: JwtKey
+    key: JwtKey,
   ): JWT<Payload> {
-    if(!validJwtAlgorithms.has(key.alg)) {
+    if (!validJwtAlgorithms.has(key.alg)) {
       throw new JwtError("invalid JWT algorithm", JwtErrorCode.algorithmInvalid);
     }
     const isAsymmetric = validJwtAsymmetricAlgorithms.has(key.alg as JwtAsymmetricAlgorithm);
@@ -570,19 +570,20 @@ export class JWT<Payload extends SURecord> {
   }
 
   static #timingSafeEqual(a: NodeJS.ArrayBufferView, b: NodeJS.ArrayBufferView) {
-    if(a.byteLength !== b.byteLength)
+    if (a.byteLength !== b.byteLength) {
       return false;
+    }
     return timingSafeEqual(a, b);
   }
 
   private constructor(
     key: JwtKey,
-    isAsymmetric: boolean
+    isAsymmetric: boolean,
   ) {
-    if(key.alg !== "none" && !(key.privateKey || key.publicKey)) {
+    if (key.alg !== "none" && !(key.privateKey || key.publicKey)) {
       throw new JwtError(
-        "null or empty JWT private and public key. either are required", 
-        JwtErrorCode.keyInvalid
+        "null or empty JWT private and public key. either are required",
+        JwtErrorCode.keyInvalid,
       );
     }
 
@@ -596,13 +597,13 @@ export class JWT<Payload extends SURecord> {
   #signData(
     alg: JwtAlgorithm,
     algorithm: JwtAlgorithmEnum,
-    dataToSign: string
+    dataToSign: string,
   ): string {
-    switch(alg) {
+    switch (alg) {
       case "HS256":
       case "HS384":
       case "HS512":
-        if(!this.#privateKey) {
+        if (!this.#privateKey) {
           throw new JwtError("null or empty JWT private key", JwtErrorCode.privateKeyInvalid);
         }
         return createHmac(algorithm, this.#privateKey, { encoding: encBase64url })
@@ -614,23 +615,23 @@ export class JWT<Payload extends SURecord> {
       case "RS256":
       case "RS384":
       case "RS512":
-        if(!this.#privateKey) {
+        if (!this.#privateKey) {
           throw new JwtError("null or empty JWT private key", JwtErrorCode.privateKeyInvalid);
         }
         return createSign(algorithm)
-            .update(dataToSign)
-            .sign(this.#privateKey, encBase64url);
+          .update(dataToSign)
+          .sign(this.#privateKey, encBase64url);
       case "PS256":
       case "PS384":
       case "PS512":
-        if(!this.#privateKey) {
+        if (!this.#privateKey) {
           throw new JwtError("null or empty JWT private key", JwtErrorCode.privateKeyInvalid);
         }
         return sign(JwtAlgorithmHashEnum[alg], Buffer.from(dataToSign, encUtf8), {
-            key: this.#privateKey,
-            padding: constants.RSA_PKCS1_PSS_PADDING,
-            saltLength: constants.RSA_PSS_SALTLEN_DIGEST,
-          }).toString(encBase64url);
+          key: this.#privateKey,
+          padding: constants.RSA_PKCS1_PSS_PADDING,
+          saltLength: constants.RSA_PSS_SALTLEN_DIGEST,
+        }).toString(encBase64url);
       // case "none":
       default:
         return "";
@@ -641,48 +642,51 @@ export class JWT<Payload extends SURecord> {
     alg: JwtAlgorithm,
     algorithm: JwtAlgorithmEnum,
     dataToVerify: string,
-    signature: string
+    signature: string,
   ): boolean {
-    switch(alg) {
+    switch (alg) {
       case "HS256":
       case "HS384":
       case "HS512":
-        if(!this.#publicKey) {
+        if (!this.#publicKey) {
           throw new JwtError("null or empty JWT public key", JwtErrorCode.publicKeyInvalid);
         }
-        return JWT.#timingSafeEqual(createHmac(algorithm, this.#publicKey, { encoding: encBase64url })
-          .update(dataToVerify).digest(), Buffer.from(signature, encBase64url));
+        return JWT.#timingSafeEqual(
+          createHmac(algorithm, this.#publicKey, { encoding: encBase64url })
+            .update(dataToVerify).digest(),
+          Buffer.from(signature, encBase64url),
+        );
       case "ES256":
       case "ES384":
       case "ES512":
       case "RS256":
       case "RS384":
       case "RS512":
-        if(!this.#publicKey) {
+        if (!this.#publicKey) {
           throw new JwtError("null or empty JWT public key", JwtErrorCode.publicKeyInvalid);
         }
         return createVerify(algorithm)
-            .update(dataToVerify)
-            .verify(this.#publicKey, signature, encBase64url);
+          .update(dataToVerify)
+          .verify(this.#publicKey, signature, encBase64url);
       case "PS256":
       case "PS384":
       case "PS512":
-        if(!this.#publicKey) {
+        if (!this.#publicKey) {
           throw new JwtError("null or empty JWT public key", JwtErrorCode.publicKeyInvalid);
         }
         return verify(
-            JwtAlgorithmHashEnum[alg],
-            Buffer.from(dataToVerify, encUtf8),
-            {
-              key: this.#publicKey,
-              padding: constants.RSA_PKCS1_PSS_PADDING,
-              saltLength: constants.RSA_PSS_SALTLEN_DIGEST,
-            },
-            Buffer.from(signature, encBase64url)
-          );
+          JwtAlgorithmHashEnum[alg],
+          Buffer.from(dataToVerify, encUtf8),
+          {
+            key: this.#publicKey,
+            padding: constants.RSA_PKCS1_PSS_PADDING,
+            saltLength: constants.RSA_PSS_SALTLEN_DIGEST,
+          },
+          Buffer.from(signature, encBase64url),
+        );
       case "none":
         return signature === "";
-      default: 
+      default:
         throw new JwtError("invalid algorithm", JwtErrorCode.algorithmInvalid);
     }
   }
@@ -693,7 +697,7 @@ export class JWT<Payload extends SURecord> {
    */
   #validateAudience(
     expectedAudience: string | string[],
-    audience: string | string[] | undefined
+    audience: string | string[] | undefined,
   ): boolean {
     if (!audience) return false;
     if (Array.isArray(audience)) {
@@ -711,22 +715,34 @@ export class JWT<Payload extends SURecord> {
   #validateClaims(
     payload: JwtPayload<Payload> & { exp: number; nbf: number },
     verifyJwt: JwtVerifyOptions,
-    now: number = JWT.now()
+    now: number = JWT.now(),
   ): JwtResult<Payload> {
     if (verifyJwt.jti != null && payload.jti !== verifyJwt.jti) {
-      return { valid: false, error: new JwtError("jti (jwt id) mismatch", JwtErrorCode.jtiMismatch) };
+      return {
+        valid: false,
+        error: new JwtError("jti (jwt id) mismatch", JwtErrorCode.jtiMismatch),
+      };
     }
 
     if (verifyJwt.iss != null && payload.iss !== verifyJwt.iss) {
-      return { valid: false, error: new JwtError("iss (issuer) mismatch", JwtErrorCode.issMismatch) };
+      return {
+        valid: false,
+        error: new JwtError("iss (issuer) mismatch", JwtErrorCode.issMismatch),
+      };
     }
 
     if (verifyJwt.sub != null && payload.sub !== verifyJwt.sub) {
-      return { valid: false, error: new JwtError("sub (subject) mismatch", JwtErrorCode.subMismatch) };
+      return {
+        valid: false,
+        error: new JwtError("sub (subject) mismatch", JwtErrorCode.subMismatch),
+      };
     }
 
     if (verifyJwt.aud != null && !this.#validateAudience(verifyJwt.aud, payload.aud)) {
-      return { valid: false, error: new JwtError("aud (audience) mismatch", JwtErrorCode.audMismatch) };
+      return {
+        valid: false,
+        error: new JwtError("aud (audience) mismatch", JwtErrorCode.audMismatch),
+      };
     }
 
     if (verifyJwt.exp != null && now > payload.exp + (verifyJwt.expLeeway ?? 0)) {
@@ -734,14 +750,17 @@ export class JWT<Payload extends SURecord> {
     }
 
     if (verifyJwt.nbf != null && payload.nbf - (verifyJwt.nbfLeeway ?? 0) > now) {
-      return { valid: false, error: new JwtError("token not yet valid (nbf)", JwtErrorCode.notValidYet) };
+      return {
+        valid: false,
+        error: new JwtError("token not yet valid (nbf)", JwtErrorCode.notValidYet),
+      };
     }
 
     return { valid: true, payload };
   }
 
   #safelyParseJson<ObjType extends SURecord>(
-    jsonStr: string
+    jsonStr: string,
   ): ObjType | undefined {
     try {
       const result = JSON.parse(jsonStr);
@@ -753,28 +772,31 @@ export class JWT<Payload extends SURecord> {
 
   /**
    * Synchronously sign a payload and return a JWT token string.
-   * 
+   *
    * @throws {JwtError} If signing fails due to an invalid algorithm or key.
    */
   signSync(payload: JwtPayload<Payload>): string {
     const alg = this.#alg;
     const algorithm = this.#algorithm;
     const header = Buffer.from(JSON.stringify({ typ: "JWT", alg }), encUtf8).toString(
-      encBase64url
+      encBase64url,
     );
     const payload_ = Buffer.from(JSON.stringify(payload), encUtf8).toString(encBase64url);
     const dataToSign = `${header}.${payload_}`;
     try {
       const signature = this.#signData(alg, algorithm, dataToSign);
       return `${dataToSign}.${signature}`;
-    } catch(error) {
-      throw new JwtError(error instanceof Error ? error.message : "internal error", JwtErrorCode.internalError);
+    } catch (error) {
+      throw new JwtError(
+        error instanceof Error ? error.message : "internal error",
+        JwtErrorCode.internalError,
+      );
     }
   }
 
   /**
    * Asynchronously sign a payload and return a JWT token string.
-   * 
+   *
    * @throws {JwtError} If signing fails due to an invalid token.
    */
   sign(payload: JwtPayload<Payload>): Promise<string> {
@@ -782,7 +804,7 @@ export class JWT<Payload extends SURecord> {
       try {
         const token = this.signSync(payload);
         resolve(token);
-      } catch(error) {
+      } catch (error) {
         reject(error);
       }
     });
@@ -790,13 +812,13 @@ export class JWT<Payload extends SURecord> {
 
   /**
    * Synchronously verify only the token and the signature (no payload or claims are checked).
-   * 
+   *
    * @returns a JwtResult with only the valid propery set to true on success.
    * @throws {JwtError} If the token is malformed or the signature is invalid.
    */
   verifySignatureSync(
     token: string,
-    verifyJwt?: Pick<JwtVerifyOptions, "strict">
+    verifyJwt?: Pick<JwtVerifyOptions, "strict">,
   ): JwtResult<Payload> {
     verifyJwt = { strict: true, ...verifyJwt };
     const [header, body, signature] = token.split(".", 3);
@@ -805,23 +827,38 @@ export class JWT<Payload extends SURecord> {
     }
 
     const jwtHeader = this.#safelyParseJson<JwtHeader>(
-      Buffer.from(header, encBase64url).toString(encUtf8)
+      Buffer.from(header, encBase64url).toString(encUtf8),
     );
     if (!jwtHeader) {
-      return { valid: false, error: new JwtError("invalid token header", JwtErrorCode.tokenHeaderInvalid) };
+      return {
+        valid: false,
+        error: new JwtError("invalid token header", JwtErrorCode.tokenHeaderInvalid),
+      };
     }
     const { typ, alg } = jwtHeader;
     if (typ !== "JWT") {
-      return { valid: false, error: new JwtError("invalid token type", JwtErrorCode.tokenTypeInvalid) };
-    } 
-    if (verifyJwt.strict && this.#alg !== alg) {
-      return { valid: false, error: new JwtError("algorithm mismatch", JwtErrorCode.algorithmMismatch) };
-    } 
-    if (!alg || !validJwtAlgorithms.has(alg)) {
-      return { valid: false, error: new JwtError("invalid algorithm", JwtErrorCode.algorithmInvalid) };
+      return {
+        valid: false,
+        error: new JwtError("invalid token type", JwtErrorCode.tokenTypeInvalid),
+      };
     }
-    if(!signature && alg !== "none") {
-      return { valid: false, error: new JwtError("invalid signature", JwtErrorCode.signatureInvalid) };
+    if (verifyJwt.strict && this.#alg !== alg) {
+      return {
+        valid: false,
+        error: new JwtError("algorithm mismatch", JwtErrorCode.algorithmMismatch),
+      };
+    }
+    if (!alg || !validJwtAlgorithms.has(alg)) {
+      return {
+        valid: false,
+        error: new JwtError("invalid algorithm", JwtErrorCode.algorithmInvalid),
+      };
+    }
+    if (!signature && alg !== "none") {
+      return {
+        valid: false,
+        error: new JwtError("invalid signature", JwtErrorCode.signatureInvalid),
+      };
     }
 
     const algorithm = JwtAlgorithmEnum[alg as JwtAlgorithm];
@@ -831,15 +868,21 @@ export class JWT<Payload extends SURecord> {
         alg,
         algorithm,
         dataToVerify,
-        signature
+        signature,
       );
       if (!signaturesMatch) {
-        return { valid: false, error: new JwtError("signature mismatch", JwtErrorCode.signatureMismatch) };
+        return {
+          valid: false,
+          error: new JwtError("signature mismatch", JwtErrorCode.signatureMismatch),
+        };
       }
-    } catch(error) {
-      return { 
-        valid: false, 
-        error: new JwtError(error instanceof Error ? error.message : "internal error", JwtErrorCode.internalError) 
+    } catch (error) {
+      return {
+        valid: false,
+        error: new JwtError(
+          error instanceof Error ? error.message : "internal error",
+          JwtErrorCode.internalError,
+        ),
       };
     }
     return { valid: true };
@@ -847,25 +890,26 @@ export class JWT<Payload extends SURecord> {
 
   /**
    * Asynchronously verify only the signature of the token (no claims checked).
-   * 
+   *
    * @returns a Promise to a boolean set to true on success.
    * @throws {JwtError} If the token is malformed or the signature is invalid.
    */
   verifySignature(
     token: string,
-    verifyJwt?: Pick<JwtVerifyOptions, "strict">
+    verifyJwt?: Pick<JwtVerifyOptions, "strict">,
   ): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const { valid, error } = this.verifySignatureSync(token, verifyJwt);
-      if(!valid)
+      if (!valid) {
         return reject(error);
+      }
       resolve(valid);
     });
   }
 
   /**
    * Synchronously verify a token, signature, payload and claims.
-   * 
+   *
    * @returns a JwtResult with a valid payload and the valid propery set to true on success.
    * @throws {JwtError} If the token, payload, signature, or claims are invalid.
    */
@@ -876,25 +920,40 @@ export class JWT<Payload extends SURecord> {
       return { valid: false, error: new JwtError("invalid token", JwtErrorCode.tokenInvalid) };
     }
     const jwtHeader = this.#safelyParseJson<JwtHeader>(
-      Buffer.from(header, encBase64url).toString(encUtf8)
+      Buffer.from(header, encBase64url).toString(encUtf8),
     );
     if (!jwtHeader) {
-      return { valid: false, error: new JwtError("invalid token header", JwtErrorCode.tokenHeaderInvalid) };
+      return {
+        valid: false,
+        error: new JwtError("invalid token header", JwtErrorCode.tokenHeaderInvalid),
+      };
     }
     const { typ, alg } = jwtHeader;
     if (typ !== "JWT") {
-      return { valid: false, error: new JwtError("invalid token type", JwtErrorCode.tokenTypeInvalid) };
+      return {
+        valid: false,
+        error: new JwtError("invalid token type", JwtErrorCode.tokenTypeInvalid),
+      };
     }
     if (verifyJwt.strict && this.#alg !== alg) {
-      return { valid: false, error: new JwtError("algorithm mismatch", JwtErrorCode.algorithmMismatch) };
+      return {
+        valid: false,
+        error: new JwtError("algorithm mismatch", JwtErrorCode.algorithmMismatch),
+      };
     }
     if (!alg || !validJwtAlgorithms.has(alg)) {
-      return { valid: false, error: new JwtError("invalid algorithm", JwtErrorCode.algorithmInvalid) };
+      return {
+        valid: false,
+        error: new JwtError("invalid algorithm", JwtErrorCode.algorithmInvalid),
+      };
     }
-    if(!signature && alg !== "none") {
-      return { valid: false, error: new JwtError("invalid signature", JwtErrorCode.signatureInvalid) };
+    if (!signature && alg !== "none") {
+      return {
+        valid: false,
+        error: new JwtError("invalid signature", JwtErrorCode.signatureInvalid),
+      };
     }
-    
+
     const algorithm = JwtAlgorithmEnum[alg as JwtAlgorithm];
     const dataToVerify = `${header}.${body}`;
     try {
@@ -902,37 +961,47 @@ export class JWT<Payload extends SURecord> {
         alg,
         algorithm,
         dataToVerify,
-        signature
+        signature,
       );
       if (!signaturesMatch) {
-        return { valid: false, error: new JwtError("signature mismatch", JwtErrorCode.signatureMismatch) };
+        return {
+          valid: false,
+          error: new JwtError("signature mismatch", JwtErrorCode.signatureMismatch),
+        };
       }
       const jwtPayload = this.#safelyParseJson<
         JwtPayload<Payload & { exp: boolean; nbf: boolean }>
       >(Buffer.from(body, encBase64url).toString(encUtf8));
       if (!jwtPayload) {
-        return { valid: false, error: new JwtError("invalid payload", JwtErrorCode.payloadInvalid) };
+        return {
+          valid: false,
+          error: new JwtError("invalid payload", JwtErrorCode.payloadInvalid),
+        };
       }
       return this.#validateClaims(jwtPayload, verifyJwt);
-    } catch(error) {
-      return { 
-        valid: false, 
-        error: new JwtError(error instanceof Error ? error.message : "internal error", JwtErrorCode.internalError) 
+    } catch (error) {
+      return {
+        valid: false,
+        error: new JwtError(
+          error instanceof Error ? error.message : "internal error",
+          JwtErrorCode.internalError,
+        ),
       };
     }
   }
 
   /**
    * Asynchronously verify a token, signature, payload and claims.
-   * 
+   *
    * @returns a Promise to a valid payload on success.
    * @throws {JwtError} If the token, payload, signature, or claims are invalid.
    */
   verify(token: string, verifyJwt?: JwtVerifyOptions): Promise<JwtPayload<Payload>> {
     return new Promise((resolve, reject) => {
       const { valid, payload, error } = this.verifySync(token, verifyJwt);
-      if(!(valid && payload))
+      if (!(valid && payload)) {
         return reject(error);
+      }
       resolve(payload);
     });
   }

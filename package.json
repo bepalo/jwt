@@ -1,7 +1,7 @@
 {
   "name": "@bepalo/jwt",
-  "version": "2.0.4",
-  "description": "A secure and tested json-web-token class-based utility library for generating keys, signing, verifying, and decoding JWT payloads for use with your high-security projects.",
+  "version": "2.0.5",
+  "description": "A secure and tested json-web-token class-based utility library for generating keys, signing, verifying, and decoding JWT payloads for use with your high-security demanding projects.",
   "author": "Natnael Eshetu",
   "license": "MIT",
   "repository": {
@@ -16,6 +16,11 @@
   "main": "./dist/cjs/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist/",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "build:esm": "tsc --project tsconfig.esm.json",
     "build:cjs": "tsc --project tsconfig.cjs.json",
@@ -25,13 +30,6 @@
     "test": "vitest --reporter=dot",
     "test:ci": "vitest run --reporter=vitest-markdown-reporter --outputFile=test-result.md"
   },
-  "keywords": [
-    "jwt",
-    "jsonwebtoken",
-    "crypto",
-    "signature",
-    "utility"
-  ],
   "packageManager": "pnpm@10.12.1",
   "devDependencies": {
     "@types/bun": "latest",
@@ -42,5 +40,28 @@
   },
   "dependencies": {
     "@bepalo/time": "^1.2.6"
-  }
+  },
+  "keywords": [
+    "auth",
+    "authorization",
+    "access-token",
+    "bearer",
+    "json web token",
+    "jwt",
+    "jws",
+    "jwk",
+    "token-verification",
+    "claims",
+    "payload",
+    "RS256",
+    "ES256",
+    "HMAC",
+    "JWT signing",
+    "JWT decoding",
+    "JWT validation",
+    "secure tokens",
+    "middleware",
+    "access control",
+    "identity"
+  ]
 }

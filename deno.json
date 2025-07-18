@@ -1,0 +1,63 @@
+{
+  "name": "@bepalo/jwt",
+  "version": "2.0.5",
+  "exports": {
+    "./mod.ts": "./mod.ts"
+  },
+  "description": "A secure and tested json-web-token class-based utility library for generating keys, signing, verifying, and decoding JWT payloads for use with your high-security demanding projects.",
+  "license": "MIT",
+  "homepage": "https://github.com/bepalo/jwt",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bepalo/jwt"
+  },
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2021"
+  },
+  "lint": {
+    "include": ["./src/","./tests/"],
+    "rules": {
+      "tags": ["recommended"],
+      "exclude": ["no-sloppy-imports"]
+    }
+  },
+  "fmt": {
+    "include": ["./src/", "./tests/"],
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "singleQuote": false,
+    "proseWrap": "preserve"
+  },
+  "test": {
+    "files": {
+      "exclude": ["tests/**", "**/*.vitest.ts"]
+    }
+  },
+  "imports": {
+    "@bepalo/jwt": "./src/index.ts"
+  },
+  "keywords": [
+    "auth",
+    "authorization",
+    "access-token",
+    "bearer",
+    "json web token",
+    "jwt",
+    "jws",
+    "jwk",
+    "token-verification",
+    "claims",
+    "payload",
+    "RS256",
+    "ES256",
+    "HMAC",
+    "JWT signing",
+    "JWT decoding",
+    "JWT validation",
+    "secure tokens",
+    "middleware",
+    "access control",
+    "identity"
+  ]
+}

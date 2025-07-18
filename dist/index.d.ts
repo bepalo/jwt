@@ -73,7 +73,6 @@ export type JwtAsymmetricAlgorithm = "RS256" | "RS384" | "RS512" | "ES256" | "ES
  *   - PS256: RSA-PSS variant with SHA-256.
  *   - PS384: RSA-PSS variant with SHA-384.
  *   - PS512: RSA-PSS variant with SHA-512.
- *
  */
 export type JwtAlgorithm = JwtSymmetricAlgorithm | JwtAsymmetricAlgorithm | "none";
 /**
@@ -286,3 +285,4 @@ export declare class JWT<Payload extends SURecord> {
      */
     verify(token: string, verifyJwt?: JwtVerifyOptions): Promise<JwtPayload<Payload>>;
 }
+//# sourceMappingURL=index.d.ts.map

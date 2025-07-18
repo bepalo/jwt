@@ -14,7 +14,6 @@ var _JWT_instances, _a, _JWT_alg, _JWT_algorithm, _JWT_privateKey, _JWT_publicKe
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JWT = exports.validJwtAlgorithms = exports.validJwtAsymmetricAlgorithms = exports.validJwtSymmetricAlgorithms = exports.JwtError = exports.JwtErrorCode = void 0;
 /**
- *
  * A secure and tested json-web-token class-based utility library for generating keys, signing,
  * verifying, and decoding JWT payloads for use with your high-security projects.
  *
@@ -34,10 +33,10 @@ exports.JWT = exports.validJwtAlgorithms = exports.validJwtAsymmetricAlgorithms 
  * @exports JwtAsymmetricAlgorithm type
  * @exports JwtAlgorithm type
  * @exports SURecord type
- *
  */
 const node_crypto_1 = require("node:crypto");
 const time_1 = require("@bepalo/time");
+const node_buffer_1 = require("node:buffer");
 /**
  * Smart Error codes for use with this JWT library
  */
@@ -82,7 +81,6 @@ var JwtErrorCode;
     JwtErrorCode[JwtErrorCode["privateKeyInvalid"] = 301] = "privateKeyInvalid";
     JwtErrorCode[JwtErrorCode["publicKeyInvalid"] = 302] = "publicKeyInvalid";
 })(JwtErrorCode || (exports.JwtErrorCode = JwtErrorCode = {}));
-;
 /**
  * Error class for use with this JWT library
  */
@@ -177,7 +175,7 @@ exports.validJwtAlgorithms = Object.freeze(new Set([
     "ES256",
     "ES384",
     "ES512",
-    "none"
+    "none",
 ]));
 const encUtf8 = "utf-8";
 const encBase64url = "base64url";
@@ -406,8 +404,8 @@ class JWT {
     signSync(payload) {
         const alg = __classPrivateFieldGet(this, _JWT_alg, "f");
         const algorithm = __classPrivateFieldGet(this, _JWT_algorithm, "f");
-        const header = Buffer.from(JSON.stringify({ typ: "JWT", alg }), encUtf8).toString(encBase64url);
-        const payload_ = Buffer.from(JSON.stringify(payload), encUtf8).toString(encBase64url);
+        const header = node_buffer_1.Buffer.from(JSON.stringify({ typ: "JWT", alg }), encUtf8).toString(encBase64url);
+        const payload_ = node_buffer_1.Buffer.from(JSON.stringify(payload), encUtf8).toString(encBase64url);
         const dataToSign = `${header}.${payload_}`;
         try {
             const signature = __classPrivateFieldGet(this, _JWT_instances, "m", _JWT_signData).call(this, alg, algorithm, dataToSign);
@@ -445,35 +443,53 @@ class JWT {
         if (!(header && body)) {
             return { valid: false, error: new JwtError("invalid token", JwtErrorCode.tokenInvalid) };
         }
-        const jwtHeader = __classPrivateFieldGet(this, _JWT_instances, "m", _JWT_safelyParseJson).call(this, Buffer.from(header, encBase64url).toString(encUtf8));
+        const jwtHeader = __classPrivateFieldGet(this, _JWT_instances, "m", _JWT_safelyParseJson).call(this, node_buffer_1.Buffer.from(header, encBase64url).toString(encUtf8));
         if (!jwtHeader) {
-            return { valid: false, error: new JwtError("invalid token header", JwtErrorCode.tokenHeaderInvalid) };
+            return {
+                valid: false,
+                error: new JwtError("invalid token header", JwtErrorCode.tokenHeaderInvalid),
+            };
         }
         const { typ, alg } = jwtHeader;
         if (typ !== "JWT") {
-            return { valid: false, error: new JwtError("invalid token type", JwtErrorCode.tokenTypeInvalid) };
+            return {
+                valid: false,
+                error: new JwtError("invalid token type", JwtErrorCode.tokenTypeInvalid),
+            };
         }
         if (verifyJwt.strict && __classPrivateFieldGet(this, _JWT_alg, "f") !== alg) {
-            return { valid: false, error: new JwtError("algorithm mismatch", JwtErrorCode.algorithmMismatch) };
+            return {
+                valid: false,
+                error: new JwtError("algorithm mismatch", JwtErrorCode.algorithmMismatch),
+            };
         }
         if (!alg || !exports.validJwtAlgorithms.has(alg)) {
-            return { valid: false, error: new JwtError("invalid algorithm", JwtErrorCode.algorithmInvalid) };
+            return {
+                valid: false,
+                error: new JwtError("invalid algorithm", JwtErrorCode.algorithmInvalid),
+            };
         }
         if (!signature && alg !== "none") {
-            return { valid: false, error: new JwtError("invalid signature", JwtErrorCode.signatureInvalid) };
+            return {
+                valid: false,
+                error: new JwtError("invalid signature", JwtErrorCode.signatureInvalid),
+            };
         }
         const algorithm = JwtAlgorithmEnum[alg];
         const dataToVerify = `${header}.${body}`;
         try {
             const signaturesMatch = __classPrivateFieldGet(this, _JWT_instances, "m", _JWT_verifySignature).call(this, alg, algorithm, dataToVerify, signature);
             if (!signaturesMatch) {
-                return { valid: false, error: new JwtError("signature mismatch", JwtErrorCode.signatureMismatch) };
+                return {
+                    valid: false,
+                    error: new JwtError("signature mismatch", JwtErrorCode.signatureMismatch),
+                };
             }
         }
         catch (error) {
             return {
                 valid: false,
-                error: new JwtError(error instanceof Error ? error.message : "internal error", JwtErrorCode.internalError)
+                error: new JwtError(error instanceof Error ? error.message : "internal error", JwtErrorCode.internalError),
             };
         }
         return { valid: true };
@@ -487,8 +503,9 @@ class JWT {
     verifySignature(token, verifyJwt) {
         return new Promise((resolve, reject) => {
             const { valid, error } = this.verifySignatureSync(token, verifyJwt);
-            if (!valid)
+            if (!valid) {
                 return reject(error);
+            }
             resolve(valid);
         });
     }
@@ -504,40 +521,61 @@ class JWT {
         if (!(header && body)) {
             return { valid: false, error: new JwtError("invalid token", JwtErrorCode.tokenInvalid) };
         }
-        const jwtHeader = __classPrivateFieldGet(this, _JWT_instances, "m", _JWT_safelyParseJson).call(this, Buffer.from(header, encBase64url).toString(encUtf8));
+        const jwtHeader = __classPrivateFieldGet(this, _JWT_instances, "m", _JWT_safelyParseJson).call(this, node_buffer_1.Buffer.from(header, encBase64url).toString(encUtf8));
         if (!jwtHeader) {
-            return { valid: false, error: new JwtError("invalid token header", JwtErrorCode.tokenHeaderInvalid) };
+            return {
+                valid: false,
+                error: new JwtError("invalid token header", JwtErrorCode.tokenHeaderInvalid),
+            };
         }
         const { typ, alg } = jwtHeader;
         if (typ !== "JWT") {
-            return { valid: false, error: new JwtError("invalid token type", JwtErrorCode.tokenTypeInvalid) };
+            return {
+                valid: false,
+                error: new JwtError("invalid token type", JwtErrorCode.tokenTypeInvalid),
+            };
         }
         if (verifyJwt.strict && __classPrivateFieldGet(this, _JWT_alg, "f") !== alg) {
-            return { valid: false, error: new JwtError("algorithm mismatch", JwtErrorCode.algorithmMismatch) };
+            return {
+                valid: false,
+                error: new JwtError("algorithm mismatch", JwtErrorCode.algorithmMismatch),
+            };
         }
         if (!alg || !exports.validJwtAlgorithms.has(alg)) {
-            return { valid: false, error: new JwtError("invalid algorithm", JwtErrorCode.algorithmInvalid) };
+            return {
+                valid: false,
+                error: new JwtError("invalid algorithm", JwtErrorCode.algorithmInvalid),
+            };
         }
         if (!signature && alg !== "none") {
-            return { valid: false, error: new JwtError("invalid signature", JwtErrorCode.signatureInvalid) };
+            return {
+                valid: false,
+                error: new JwtError("invalid signature", JwtErrorCode.signatureInvalid),
+            };
         }
         const algorithm = JwtAlgorithmEnum[alg];
         const dataToVerify = `${header}.${body}`;
         try {
             const signaturesMatch = __classPrivateFieldGet(this, _JWT_instances, "m", _JWT_verifySignature).call(this, alg, algorithm, dataToVerify, signature);
             if (!signaturesMatch) {
-                return { valid: false, error: new JwtError("signature mismatch", JwtErrorCode.signatureMismatch) };
+                return {
+                    valid: false,
+                    error: new JwtError("signature mismatch", JwtErrorCode.signatureMismatch),
+                };
             }
-            const jwtPayload = __classPrivateFieldGet(this, _JWT_instances, "m", _JWT_safelyParseJson).call(this, Buffer.from(body, encBase64url).toString(encUtf8));
+            const jwtPayload = __classPrivateFieldGet(this, _JWT_instances, "m", _JWT_safelyParseJson).call(this, node_buffer_1.Buffer.from(body, encBase64url).toString(encUtf8));
             if (!jwtPayload) {
-                return { valid: false, error: new JwtError("invalid payload", JwtErrorCode.payloadInvalid) };
+                return {
+                    valid: false,
+                    error: new JwtError("invalid payload", JwtErrorCode.payloadInvalid),
+                };
             }
             return __classPrivateFieldGet(this, _JWT_instances, "m", _JWT_validateClaims).call(this, jwtPayload, verifyJwt);
         }
         catch (error) {
             return {
                 valid: false,
-                error: new JwtError(error instanceof Error ? error.message : "internal error", JwtErrorCode.internalError)
+                error: new JwtError(error instanceof Error ? error.message : "internal error", JwtErrorCode.internalError),
             };
         }
     }
@@ -550,16 +588,18 @@ class JWT {
     verify(token, verifyJwt) {
         return new Promise((resolve, reject) => {
             const { valid, payload, error } = this.verifySync(token, verifyJwt);
-            if (!(valid && payload))
+            if (!(valid && payload)) {
                 return reject(error);
+            }
             resolve(payload);
         });
     }
 }
 exports.JWT = JWT;
 _a = JWT, _JWT_alg = new WeakMap(), _JWT_algorithm = new WeakMap(), _JWT_privateKey = new WeakMap(), _JWT_publicKey = new WeakMap(), _JWT_isAsymmetric = new WeakMap(), _JWT_instances = new WeakSet(), _JWT_timingSafeEqual = function _JWT_timingSafeEqual(a, b) {
-    if (a.byteLength !== b.byteLength)
+    if (a.byteLength !== b.byteLength) {
         return false;
+    }
     return (0, node_crypto_1.timingSafeEqual)(a, b);
 }, _JWT_signData = function _JWT_signData(alg, algorithm, dataToSign) {
     switch (alg) {
@@ -590,7 +630,7 @@ _a = JWT, _JWT_alg = new WeakMap(), _JWT_algorithm = new WeakMap(), _JWT_private
             if (!__classPrivateFieldGet(this, _JWT_privateKey, "f")) {
                 throw new JwtError("null or empty JWT private key", JwtErrorCode.privateKeyInvalid);
             }
-            return (0, node_crypto_1.sign)(JwtAlgorithmHashEnum[alg], Buffer.from(dataToSign, encUtf8), {
+            return (0, node_crypto_1.sign)(JwtAlgorithmHashEnum[alg], node_buffer_1.Buffer.from(dataToSign, encUtf8), {
                 key: __classPrivateFieldGet(this, _JWT_privateKey, "f"),
                 padding: node_crypto_1.constants.RSA_PKCS1_PSS_PADDING,
                 saltLength: node_crypto_1.constants.RSA_PSS_SALTLEN_DIGEST,
@@ -608,7 +648,7 @@ _a = JWT, _JWT_alg = new WeakMap(), _JWT_algorithm = new WeakMap(), _JWT_private
                 throw new JwtError("null or empty JWT public key", JwtErrorCode.publicKeyInvalid);
             }
             return __classPrivateFieldGet(_a, _a, "m", _JWT_timingSafeEqual).call(_a, (0, node_crypto_1.createHmac)(algorithm, __classPrivateFieldGet(this, _JWT_publicKey, "f"), { encoding: encBase64url })
-                .update(dataToVerify).digest(), Buffer.from(signature, encBase64url));
+                .update(dataToVerify).digest(), node_buffer_1.Buffer.from(signature, encBase64url));
         case "ES256":
         case "ES384":
         case "ES512":
@@ -627,11 +667,11 @@ _a = JWT, _JWT_alg = new WeakMap(), _JWT_algorithm = new WeakMap(), _JWT_private
             if (!__classPrivateFieldGet(this, _JWT_publicKey, "f")) {
                 throw new JwtError("null or empty JWT public key", JwtErrorCode.publicKeyInvalid);
             }
-            return (0, node_crypto_1.verify)(JwtAlgorithmHashEnum[alg], Buffer.from(dataToVerify, encUtf8), {
+            return (0, node_crypto_1.verify)(JwtAlgorithmHashEnum[alg], node_buffer_1.Buffer.from(dataToVerify, encUtf8), {
                 key: __classPrivateFieldGet(this, _JWT_publicKey, "f"),
                 padding: node_crypto_1.constants.RSA_PKCS1_PSS_PADDING,
                 saltLength: node_crypto_1.constants.RSA_PSS_SALTLEN_DIGEST,
-            }, Buffer.from(signature, encBase64url));
+            }, node_buffer_1.Buffer.from(signature, encBase64url));
         case "none":
             return signature === "";
         default:
@@ -653,22 +693,37 @@ _a = JWT, _JWT_alg = new WeakMap(), _JWT_algorithm = new WeakMap(), _JWT_private
 }, _JWT_validateClaims = function _JWT_validateClaims(payload, verifyJwt, now = _a.now()) {
     var _b, _c;
     if (verifyJwt.jti != null && payload.jti !== verifyJwt.jti) {
-        return { valid: false, error: new JwtError("jti (jwt id) mismatch", JwtErrorCode.jtiMismatch) };
+        return {
+            valid: false,
+            error: new JwtError("jti (jwt id) mismatch", JwtErrorCode.jtiMismatch),
+        };
     }
     if (verifyJwt.iss != null && payload.iss !== verifyJwt.iss) {
-        return { valid: false, error: new JwtError("iss (issuer) mismatch", JwtErrorCode.issMismatch) };
+        return {
+            valid: false,
+            error: new JwtError("iss (issuer) mismatch", JwtErrorCode.issMismatch),
+        };
     }
     if (verifyJwt.sub != null && payload.sub !== verifyJwt.sub) {
-        return { valid: false, error: new JwtError("sub (subject) mismatch", JwtErrorCode.subMismatch) };
+        return {
+            valid: false,
+            error: new JwtError("sub (subject) mismatch", JwtErrorCode.subMismatch),
+        };
     }
     if (verifyJwt.aud != null && !__classPrivateFieldGet(this, _JWT_instances, "m", _JWT_validateAudience).call(this, verifyJwt.aud, payload.aud)) {
-        return { valid: false, error: new JwtError("aud (audience) mismatch", JwtErrorCode.audMismatch) };
+        return {
+            valid: false,
+            error: new JwtError("aud (audience) mismatch", JwtErrorCode.audMismatch),
+        };
     }
     if (verifyJwt.exp != null && now > payload.exp + ((_b = verifyJwt.expLeeway) !== null && _b !== void 0 ? _b : 0)) {
         return { valid: false, error: new JwtError("token expired", JwtErrorCode.expired) };
     }
     if (verifyJwt.nbf != null && payload.nbf - ((_c = verifyJwt.nbfLeeway) !== null && _c !== void 0 ? _c : 0) > now) {
-        return { valid: false, error: new JwtError("token not yet valid (nbf)", JwtErrorCode.notValidYet) };
+        return {
+            valid: false,
+            error: new JwtError("token not yet valid (nbf)", JwtErrorCode.notValidYet),
+        };
     }
     return { valid: true, payload };
 }, _JWT_safelyParseJson = function _JWT_safelyParseJson(jsonStr) {

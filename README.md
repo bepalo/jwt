@@ -14,7 +14,7 @@
 [![Tests](https://img.shields.io/github/actions/workflow/status/bepalo/jwt/ci.yaml?label=tests&style=flat-square)](https://github.com/bepalo/jwt/actions/workflows/ci.yaml.yml)
 [![Vitest](https://img.shields.io/badge/vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)](test-result.md)
 
-A secure and tested json-web-token class-based utility library for generating keys, signing, verifying, and decoding JWT payloads for use with your high-security projects.
+A secure and tested json-web-token class-based utility library for generating keys, signing, verifying, and decoding JWT payloads for use with your high-security demanding projects.
 
 ## Table of Contents
 

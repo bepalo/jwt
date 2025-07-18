@@ -1,0 +1,23 @@
+{
+  "version": "5",
+  "specifiers": {
+    "jsr:@bepalo/cache@*": "0.4.2"
+  },
+  "jsr": {
+    "@bepalo/cache@0.4.2": {
+      "integrity": "2a9cd9e57194bc197b96de02fa2d7a8a49618dcff6646e37da195109f43e57eb"
+    }
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:@bepalo/time@^1.2.6",
+        "npm:@types/bun@latest",
+        "npm:@types/node@^24.0.2",
+        "npm:typescript@^5.8.3",
+        "npm:vitest-markdown-reporter@~0.1.2",
+        "npm:vitest@^3.2.4"
+      ]
+    }
+  }
+}

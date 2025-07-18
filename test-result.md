@@ -2,16 +2,16 @@
 
 | 🕙 Start time | ⌛ Duration |
 | --- | ---: |
-| 7/18/2025, 4:57:26 AM | 50.232 s |
+| 7/19/2025, 2:12:24 AM | 45.854 s |
 
 | | ✅ Passed | ❌ Failed | ⏩ Skipped | 🚧 Todo | ⚪ Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 |Test Suites|15|0|0|0|15|
 |Tests|208|0|0|0|208|
 
-## ✅ <a id="file0" href="#file0">tests/jwt.test.ts</a> [[link](https://github.com/bepalo/jwt/blob/e5b1b42ed8bce25c34c166101dfa1e7d7d735213/tests/jwt.test.ts)]
+## ✅ <a id="file0" href="#file0">tests/jwt.test.ts</a> [[link](https://github.com/bepalo/jwt/blob/c188559de8e07123f39194268abfd9199af5baf6/tests/jwt.test.ts)]
 
-208 passed, 0 failed, 0 skipped, 0 todo, done in 49716.653662 s
+208 passed, 0 failed, 0 skipped, 0 todo, done in 45340.522902000004 s
 
 ```
 ✅ JWT Test › JWT.genHmac
