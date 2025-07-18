@@ -205,7 +205,7 @@ export declare class JWT<Payload extends SURecord> {
      */
     static before(time: number): RelativeTime;
     /**
-     * Generate a random HMAC key for HS256 (32 bytes), HS384 (36 bytes), or HS512 (64 bytes) encoded in base64url format.
+     * Generate a random HMAC key for HS256 (32 bytes), HS384 (48 bytes), or HS512 (64 bytes) encoded in base64url format.
      *
      * @throws {JwtError} If the algorithm is invalid.
      */
@@ -213,7 +213,7 @@ export declare class JWT<Payload extends SURecord> {
     /**
      * Generate a generic jwt key based on algorithm and optional parameters.
      *
-     * HMAC: HS256 (32 bytes), HS384 (36 bytes), or HS512 (64 bytes) encoded in base64url format.
+     * HMAC: HS256 (32 bytes), HS384 (48 bytes), or HS512 (64 bytes) encoded in base64url format.
      *
      * Default options: modulusLength of RS256|PS256 (2048), RS384|PS384 (3072), RS512|PS512 (4096).
      *
