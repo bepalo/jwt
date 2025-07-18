@@ -616,27 +616,3 @@ For more details, see [RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519) 
 ## 🕊️ Thanks, Stay Safe and Enjoy
 
 If you like this library and want to support then please give a star on [GitHub ![GitHub Repo stars](https://img.shields.io/github/stars/bepalo/jwt?style=social)](https://github.com/bepalo/jwt)
-
-<details>
-<summary> Easter egg</summary>
-
-<div style="word-break: break-all;">
-eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzM4NCJ9.eyJtZXNzYWdlIjoiVGhhbmsgR29kIPCflYrvuI8gZm9yIGV2ZXJ5dGhpbmchIiwiaWF0IjoxNzUxNjczNjAwLCJuYmYiOi0yMTQ2NTIxNjAwLCJpc3MiOiJOYXRuYWVsIiwic3ViIjoiR3JhdGl0dWRlIn0.MGYCMQD9gERXQbDSQgqHEnVeKe0MUcnjnJ4pkPMwK0Aakgf3QWQFqSqMcaUE3zThJ48WsP0CMQDNwVqeaT2FvEcqzonhhKAKSm8c7rWd1heqCjbctgk_Lln0HTvGyuCwcNiAx7TytCA
-</div>
-
-</details>
-
-
-<!-- <details>
-<summary>public key</summary>
-
-```pem
------BEGIN PUBLIC KEY-----
-MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEviwJ0AyuHBd6ccb/OxxStG1VY15+vpGr
-rJKH93drYS0LZQf3e6UiEaCcvdSaWkCXlQWwxISP3bgRxoNmnE+c4BEE1AWGTHkv
-B4/XKBrlOA5gSAUmY1kNBCpiS22PbUX/
------END PUBLIC KEY-----
-
-```
-
-</details> -->
