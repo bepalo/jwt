@@ -43,33 +43,30 @@ A secure and tested json-web-token class-based utility library for generating ke
 - 📢 Works with Node, Bun, and Deno.
 - 📢 Built on the crypto API.
 
-## 📥 Installation
+## 🚀 Get Started
 
+### 📥 Installation
 
-Bun:
+**Node.js / Bun (npm / pnpm / yarn)**
 
 ```sh
 bun add @bepalo/jwt
-```
-
-Pnpm:
-
-```sh
+# or
 pnpm add @bepalo/jwt
-```
-
->Requires Node.js v18.0.0 or newer.
-
-Npm
-
-```sh
+# or
 npm install @bepalo/jwt
+# or
+yarn add @bepalo/jwt
 ```
 
-Deno:
+**Deno**
 
-```sh
-import { JWT } from "jsr:@bepalo/jwt"
+```ts
+Import directly using the URL:
+
+import { Time } from "npm:@bepalo/jwt";
+// or
+import { Time } from "jsr:@bepalo/jwt";
 ```
 
 ## 🚀 Quick Start
@@ -616,3 +613,21 @@ For more details, see [RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519) 
 ## 🕊️ Thanks, Stay Safe and Enjoy
 
 If you like this library and want to support then please give a star on [GitHub ![GitHub Repo stars](https://img.shields.io/github/stars/bepalo/jwt?style=social)](https://github.com/bepalo/jwt)
+
+## 💖 Be a Sponsor
+
+Fund me so I can give more attention to the products and services you liked.
+
+<p align="left">
+  <a href="https://ko-fi.com/natieshzed" target="_blank">
+    <img height="32" src="https://img.shields.io/badge/Ko--fi-donate-orange?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Ko-fi Badge"> 
+  </a>
+  <br/> 
+  <a href="https://bybit.com" target="_blank"> 
+    <img height="32" src="https://img.shields.io/badge/ByBit-UID%3A%20225636163-blueviolet?style=for-the-badge&logo=bitcoin&logoColor=white" alt="ByBit UID"> 
+  </a> 
+  <br/>
+  <a href="https://www.blockchain.com/btc/address/16wLsJMVC9znDrFQCYFhVfpHwLofx8foqS" target="_blank"> 
+    <img height="32" src="https://img.shields.io/badge/BTC-16wLsJMVC9znDrFQCYFhVfpHwLofx8foqS-orange?style=for-the-badge&logo=bitcoin&logoColor=white" alt="BTC Wallet"> 
+  </a> 
+</p>
