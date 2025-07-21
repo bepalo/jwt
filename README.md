@@ -9,9 +9,8 @@
 ![Node.js](https://img.shields.io/badge/Node.js-%5E18%E2%9C%94-brightgreen?logo=nodedotjs&logoColor=white)
 ![Bun](https://img.shields.io/badge/Bun-%E2%9C%94-green?logo=bun&logoColor=white)
 ![Deno](https://img.shields.io/badge/Deno-%E2%9C%94-black?logo=deno&logoColor=white)
-
-[![CI](https://github.com/bepalo/jwt/actions/workflows/ci.yaml/badge.svg)](https://github.com/bepalo/jwt/actions)
-[![Tests](https://img.shields.io/github/actions/workflow/status/bepalo/jwt/ci.yaml?label=tests&style=flat-square)](https://github.com/bepalo/jwt/actions/workflows/ci.yaml.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/bepalo/jwt/ci.yaml?label=CI)](https://github.com/bepalo/jwt/actions/workflows/ci.yaml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/bepalo/jwt/testing.yaml?label=tests)](https://github.com/bepalo/jwt/actions/workflows/testing.yaml)
 [![Vitest](https://img.shields.io/badge/vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)](test-result.md)
 
 A secure and tested json-web-token class-based utility library for generating keys, signing, verifying, and decoding JWT payloads for use with your high-security demanding projects.
@@ -20,7 +19,7 @@ A secure and tested json-web-token class-based utility library for generating ke
 
 - [✨ Features](#-features)
 - [📥 Installation](#-installation)
-- [🚀 Quick Start](#-quick-start) 
+- [🚀 Quick Start](#-quick-start)
 - [✅ Usage](#-usage)
   - [🔑 Key Creation](#-key-creation)
   - [🏗️ JWT Instance Creation](#️-jwt-instance-creation)
