@@ -63,9 +63,9 @@ yarn add @bepalo/jwt
 ```ts
 Import directly using the URL:
 
-import { Time } from "npm:@bepalo/jwt";
+import { JWT } from "npm:@bepalo/jwt";
 // or
-import { Time } from "jsr:@bepalo/jwt";
+import { JWT } from "jsr:@bepalo/jwt";
 ```
 
 ## 🚀 Quick Start
@@ -75,20 +75,20 @@ import { Time } from "jsr:@bepalo/jwt";
 ```ts
 import { JWT } from "@bepalo/jwt";
 
-// 🏁 1. Generate a key
+// 1. Generate a key
 const secret = JWT.genHmac("HS256");
 
-// 🏁 2. Store the generated key somewhere safe like in a .env file
+// 2. Store the generated key somewhere safe like in a .env file
 console.log(secret);
 
-// 🏁 3. Load that key from where it was stored
+// 3. Load that key from where it was stored
 const signKey = process.env.SECRET;
 const verifyKey = process.env.SECRET;
 
-// 🏁 4. Create a JWT instance for signing
+// 4. Create a JWT instance for signing
 const jwtSign = JWT.createSymmetric(signKey, "HS256");
 
-// 🏁 5. Sign a payload
+// 5. Sign a payload
 const token = jwtSign.signSync({ 
   userId: 123, 
   role: "admin", 
@@ -99,16 +99,16 @@ const token = jwtSign.signSync({
   // ...
 });
 
-// 🏁 6. Create another JWT instance for verifying. *optional*
+// 6. Create another JWT instance for verifying. *optional*
 const jwtVerify = JWT.createSymmetric(verifyKey, "HS256");
 
-// 🏁 7. Verify and decode the token
+// 7. Verify and decode the token
 const { valid, payload, error } = jwtVerify.verifySync(token, {
   jti: "tid-1234",
   nbfLeeway: JWT.for(5).Seconds
 });
 
-// 🏁 8. Deal with errors or use the payload
+// 8. Deal with errors or use the payload
 console.log(valid);    // true
 console.log(payload);  // { userId: 123, role: "admin", ... }
 console.log(error);    // undefined
@@ -119,22 +119,22 @@ console.log(error);    // undefined
 ```ts
 import { JWT } from "@bepalo/jwt";
 
-// 🏁 1. Generate a key
+// 1. Generate a key
 const key = JWT.genKey("ES256");
 
-// 🏁 2. Store the generated key somewhere safe like in a .env file
+// 2. Store the generated key somewhere safe like in a .env file
 const { alg, publicKey, privateKey } = key;
 console.log(JSON.stringify({ alg, publicKey }));
 console.log(JSON.stringify({ alg, privateKey }));
 
-// 🏁 3. Load that key from where it was stored
+// 3. Load that key from where it was stored
 const signKey = JSON.parse(process.env.PRIVATE_KEY ?? "null");
 const verifyKey = JSON.parse(process.env.PUBLIC_KEY ?? "null");
 
-// 🏁 4. Create a JWT instance for signing
+// 4. Create a JWT instance for signing
 const jwtSign = JWT.create(signKey);
 
-// 🏁 5. Sign a payload
+// 5. Sign a payload
 const token = jwtSign.signSync({ 
   userId: 123, 
   role: "admin", 
@@ -145,16 +145,16 @@ const token = jwtSign.signSync({
   // ...
 });
 
-// 🏁 6. Create a JWT instance for verifying
+// 6. Create a JWT instance for verifying
 const jwtVerify = JWT.create(verifyKey);
 
-// 🏁 7. Verify and decode the token
+// 7. Verify and decode the token
 const { valid, payload, error } = jwtVerify.verifySync(token, {
   jti: "tid-1234",
   nbfLeeway: JWT.for(5).Seconds
 });
 
-// 🏁 8. Deal with errors or use the payload
+// 8. Deal with errors or use the payload
 console.log(valid);    // true
 console.log(payload);  // { userId: 123, role: "admin", ... }
 console.log(error);    // undefined
