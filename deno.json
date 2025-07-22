@@ -1,6 +1,6 @@
 {
   "name": "@bepalo/jwt",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "exports": {
     "./mod.ts": "./mod.ts"
   },

@@ -621,12 +621,4 @@ Fund me so I can give more attention to the products and services you liked.
   <a href="https://ko-fi.com/natieshzed" target="_blank">
     <img height="32" src="https://img.shields.io/badge/Ko--fi-donate-orange?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Ko-fi Badge"> 
   </a>
-  <br/> 
-  <a href="https://bybit.com" target="_blank"> 
-    <img height="32" src="https://img.shields.io/badge/ByBit-UID%3A%20225636163-blueviolet?style=for-the-badge&logo=bitcoin&logoColor=white" alt="ByBit UID"> 
-  </a> 
-  <br/>
-  <a href="https://www.blockchain.com/btc/address/16wLsJMVC9znDrFQCYFhVfpHwLofx8foqS" target="_blank"> 
-    <img height="32" src="https://img.shields.io/badge/BTC-16wLsJMVC9znDrFQCYFhVfpHwLofx8foqS-orange?style=for-the-badge&logo=bitcoin&logoColor=white" alt="BTC Wallet"> 
-  </a> 
 </p>
